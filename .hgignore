@@ -1,0 +1,11 @@
+
+syntax: glob
+*.swp
+*.sassc
+*.css
+.git
+*~
+.*.swp
+.*.swo
+.*.sw*
+
