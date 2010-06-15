@@ -19,7 +19,8 @@ module Raser
 			end
 			def query_one q, *args
 				res = query q, *args
-				r = res ? correct_row(res.first) : nil
+				#p res
+				r = (res && res.first) ? correct_row(res.first) : nil
 				res.clear if res
 				r
 			end
@@ -37,7 +38,7 @@ module Raser
 				s.to_s.gsub( /[\']/ ) { |c| "''" }.gsub( /[\\\"\x00]/ ) { |c| ?\\ + c }
 			end
 			def correct_row row
-				row.each_pair{ |k,e| e.force_encoding('utf-8') if e }
+				row.each_pair{ |k,e| e.force_encoding('utf-8') if e } if row.is_a? Hash
 			end
 		end
 	end
