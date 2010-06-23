@@ -5,11 +5,19 @@ module Raser
 	module Db
 		class PgConnection
 			attr_accessor :string, :schema
-			def initialize &block
-				#instance_eval &block if block
+			Params = {
+				string: '',
+				schema: nil,
+				standard_conforming_strings: true
+			}
+			def initialize params={}, &block
 				yield self if block
-				@conn = PGconn.new( @string )
-				query "set search_path = #{@schema}" if @schema
+				@params = Params.merge({
+					string: @string,
+					schema: @schema
+				}).merge params
+				@conn = PGconn.new( @params[:string] )
+				query "set search_path = #{@params[:schema]}" if @params[:schema]
 			end
 			def query q, *args
 				@conn.query sprintf( q, *(args.map{ |s| escape_string(s) }) )
@@ -35,7 +43,9 @@ module Raser
 				end
 			end
 			def escape_string s
-				s.to_s.gsub( /[\']/ ) { |c| "''" }.gsub( /[\\\"\x00]/ ) { |c| ?\\ + c }
+				s.to_s.gsub!( /[\']/ ) { |c| "''" }
+				s.gsub!( /[\\\"\x00]/ ) { |c| ?\\ + c } unless @params[:standard_conforming_strings]
+				s
 			end
 			def correct_row row
 				row.each_pair{ |k,e| e.force_encoding('utf-8') if e } if row.is_a? Hash
