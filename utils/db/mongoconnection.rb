@@ -20,8 +20,10 @@ module Raser
 				#@coll = @db.collection(@coll_name)
 			end
 			def open_collection coll_name
-				Collection.new @db, coll_name
+			#	Collection.new @db, coll_name
+				@db.collection(coll_name)
 			end
+=begin
 			class Collection
 				def initialize db, coll_name
 					@db = db
@@ -35,6 +37,9 @@ module Raser
 				end
 				def insert data={}, opts={}
 					@coll.insert data, opts
+				end
+				def update selector, document, options={}
+					@coll.update selector, document, options
 				end
 				def remove selector={}, opts={}
 					#@coll.remove selector, opts
@@ -51,6 +56,7 @@ module Raser
 					@coll.find_one({'_id' => id})
 				end
 			end
+=end
 		end
 	end
 end
