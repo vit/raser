@@ -23,6 +23,9 @@ module Raser
 			#	Collection.new @db, coll_name
 				@db.collection(coll_name)
 			end
+			def open_grid coll_name
+				@grid = Mongo::Grid.new(@db, coll_name)
+			end
 =begin
 			class Collection
 				def initialize db, coll_name
