@@ -6,8 +6,9 @@ module Raser
 		class PgConnection
 			attr_accessor :string, :schema
 			Params = {
-				string: '',
-				schema: nil,
+				#string: '',
+			#	string: nil,
+			#	schema: nil,
 				standard_conforming_strings: true
 			}
 			def initialize params={}, &block
@@ -16,8 +17,8 @@ module Raser
 					string: @string,
 					schema: @schema
 				}).merge params
-				@conn = PGconn.new( @params[:string] )
-				query "set search_path = #{@params[:schema]}" if @params[:schema]
+				@conn = @params[:string] ? PGconn.new( @params[:string] ) : PGconn.connect( @params['conn'] )
+				query "set search_path = #{@params['schema']}" if @params['schema']
 			end
 			def query q, *args
 				@conn.query sprintf( q, *(args.map{ |s| escape_string(s) }) )
